@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>JS Drum Kit</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+
+  <div class="keys">
+    <div data-key="65" class="key">
+      <kbd>A</kbd>
+      <span class="sound">clap</span>
+    </div>
+    <div data-key="83" class="key">
+      <kbd>S</kbd>
+      <span class="sound">hihat</span>
+    </div>
+    <div data-key="68" class="key">
+      <kbd>D</kbd>
+      <span class="sound">kick</span>
+    </div>
+    <div data-key="70" class="key">
+      <kbd>F</kbd>
+      <span class="sound">openhat</span>
+    </div>
+    <div data-key="71" class="key">
+      <kbd>G</kbd>
+      <span class="sound">boom</span>
+    </div>
+    <div data-key="72" class="key">
+      <kbd>H</kbd>
+      <span class="sound">ride</span>
+    </div>
+    <div data-key="74" class="key">
+      <kbd>J</kbd>
+      <span class="sound">snare</span>
+    </div>
+    <div data-key="75" class="key">
+      <kbd>K</kbd>
+      <span class="sound">tom</span>
+    </div>
+    <div data-key="76" class="key">
+      <kbd>L</kbd>
+      <span class="sound">tink</span>
+    </div>
+  </div>
+
+  <audio data-key="65" src="sounds/clap.wav"></audio>
+  <audio data-key="83" src="sounds/hihat.wav"></audio>
+  <audio data-key="68" src="sounds/kick.wav"></audio>
+  <audio data-key="70" src="sounds/openhat.wav"></audio>
+  <audio data-key="71" src="sounds/boom.wav"></audio>
+  <audio data-key="72" src="sounds/ride.wav"></audio>
+  <audio data-key="74" src="sounds/snare.wav"></audio>
+  <audio data-key="75" src="sounds/tom.wav"></audio>
+  <audio data-key="76" src="sounds/tink.wav"></audio>
+
+<script>
+
+  function playSound(event) {
+    // console.log(event.keyCode);
+
+    const audio = document.querySelector(`audio[data-key="${event.keyCode}"]`);
+    // console.log(audio);
+
+    const key = document.querySelector(`.key[data-key="${event.keyCode}"]`);
+    // console.log(key);
+
+    if(!audio) return; // stop function.
+    audio.currentTime = 0; // added this to allow hitting keys repeatedly fast
+    audio.play();
+
+    // No . before class name.... can also .remove or .toggle
+    key.classList.add('playing');
+    // jQuery: key.addClass('playing');
+    
+  }
+
+  function removeTransition(event) {
+    if (event.propertyName !== 'transform') return; //skip if it's not an a transform
+    
+    // console.log(this) = key
+
+    // this removes the css transform
+    this.classList.remove('playing');
+  }
+
+
+  // listen on each key ... when the transition end happens.
+  const keys = document.querySelectorAll('.key');
+  // listen for transition end for each one
+  //    keys.addEventListener('transitionend'); will not work here bc when you have an Array or Node List (this case) you cannot listen on all of them. MUst explicitly loop over every single element (= Not Efficient!)
+  keys.forEach(key => key.addEventListener('transitionend', removeTransition));
+
+  window.addEventListener('keydown', playSound);
+  // Why is this moved from the top to the end?
+
+</script>
+
+
+</body>
+</html>
