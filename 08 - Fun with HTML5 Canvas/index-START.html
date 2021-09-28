@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>HTML5 Canvas</title>
+</head>
+<body>
+<canvas id="draw" width="800" height="800"></canvas>
+<script>
+  // nothing happens when you click and dont move mouse...
+
+  const canvas = document.querySelector('#draw');
+  const ctx = canvas.getContext('2d');
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+  ctx.strokeStyle = '#BADA55';
+  // Can look up MDN for all different options here
+  ctx.lineJoin = 'round';
+  ctx.lineCap = 'round';
+  ctx.lineWidth = 100;
+  ctx.globalCompositeOperation = 'multiply'; //blending colours. LOok at diff types
+
+  // create flag. Default when moving mouse does not draw on canvas. when click down itll draw 
+  let isDrawing = false;
+  let lastX = 0;
+  let lastY = 0;
+  let hue = 0;
+  let direction = true;
+
+  // its going to take in an event
+  function draw(e) {
+    if(!isDrawing) return; //stop the fn from running when not moused down
+    console.log(e);
+
+    ctx.strokeStyle = `hsl(${hue}, 100%, 50%)`;
+    // ctx.lineWidth = hue;
+    ctx.beginPath();
+    // start from (default = 0,0 above. so we must update this dynamically)
+    ctx.moveTo(lastX, lastY); //moveTo? look into this.
+    // go to 
+    ctx.lineTo(e.offsetX, e.offsetY); //offset is basically how many variables moved over
+    ctx.stroke(); //this is where we start to see things on page.
+    // lastX = e.offsetX;
+    // lastY = e.offsetY; //see below where we combine these 2 lines into one.
+    [lastX, lastY] = [e.offsetX, e.offsetY]; //This is called destructuring an array. 
+    
+    hue++;
+    if(hue>=360){
+      hue = 0;
+    }
+
+    if(ctx.lineWidth >= 100 || ctx.lineWidth <= 1) {
+      direction = !direction;
+    }
+    if (direction) {
+    ctx.lineWidth++;
+    } else {
+      ctx.lineWidth--;
+    }
+  }
+
+  // This event will happen before 'mousemove' event below.
+  canvas.addEventListener('mousedown', (e) => {
+    isDrawing = true;
+    // before adding this line below, we're only able to draw one continuous line bc lastX and lastY = offsetX/Y where drawing ended.
+    [lastX, lastY] = [e.offsetX, e.offsetY]; //now lastX/Y is where the click begins.
+  });
+
+  canvas.addEventListener('mousemove', draw);
+    // (1)idk why, but it just makes more sense if I indent the below lines as they are all subsets of the above line
+    // canvas.addEventListener('mousedown', () => isDrawing = true); //(2)have to add more so we're going to move this line up
+    canvas.addEventListener('mouseup', () => isDrawing = false);
+    canvas.addEventListener('mouseout', () => isDrawing = false);
+</script>
+
+<style>
+  html, body {
+    margin: 0;
+  }
+</style>
+
+</body>
+</html>
