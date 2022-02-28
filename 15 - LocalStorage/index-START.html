@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Mouse Shadow</title>
+</head>
+<body>
+
+  <div class="hero">
+    <h1 contenteditable>🔥WOAH!</h1>
+  </div>
+
+  <style>
+  html {
+    color: black;
+    font-family: sans-serif;
+  }
+
+  body {
+    margin: 0;
+  }
+
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: black;
+  }
+
+  h1 {
+    text-shadow: 10px 10px 0 rgba(0,0,0,1);
+    font-size: 100px;
+  }
+
+  </style>
+
+<script>
+  const hero = document.querySelector('.hero');
+  const text = hero.querySelector('h1');
+  const walk = 500; //100px
+
+  // ohh now I understand what the e is for which I was questioning in previous projects. The e is the mousemove eventlistener event being fed into the function as an argument. e can be anything really and it displays everything that happens. 
+  function shadow(e) {
+    // console.log(e);
+
+    // lets get height of thing we hovered over. 
+    // const width = hero.offsetWidth;
+    // const height = hero.offsetHeight; 
+    const { offsetWidth: width, offsetHeight: height } = hero; //same thing
+
+    // we use let here bc we're going to have to reassign the values later.
+    let { offsetX: x, offsetY: y } = e;
+
+    // this gives us value of 
+    // DESPITE LIstening in on hero, there is a child element inside 'hero' therefore we get the x & y of child/actual element we hover on (H1). so we need to normalize.
+    // console.log(x,y);
+
+    // this = thing you listened on VS. target = thing that it triggered on.
+    // console.log(this, e.target);
+    // IF THESE 2 things are not the same ...
+    if (this !== e.target) {
+      // in this scenario, e.target is referencing the h1 child tag withing hero class.
+      x = x + e.target.offsetLeft;
+      y = y + e.target.offsetTop;
+    }
+
+    // console.log(e.target.offsetLeft);
+    // console.log(x, y);
+
+    // if 100 is high as we'll go.... 50 is the highest and -50 is the lowest offset.
+    const xWalk = Math.round((x / width * walk) - (walk / 2));
+    const yWalk = Math.round((y / height * walk) - (walk / 2));
+
+    console.log(x, width);
+    console.log(xWalk, yWalk);
+
+    text.style.textShadow = `
+    ${xWalk}px ${yWalk}px 0 rgba(255, 0, 255, 0.7),
+    ${xWalk * -1}px ${yWalk}px 0 red,
+    ${yWalk}px ${xWalk * - 1}px 0 blue,
+    ${yWalk * - 1}px ${xWalk}px 0 orange
+    `;
+  }
+
+  hero.addEventListener('mousemove', shadow);
+</script>
+</body>
+</html>
