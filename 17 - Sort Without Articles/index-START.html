@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Sort Without Articles</title>
+</head>
+<body>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: sans-serif;
+      background: url("https://source.unsplash.com/nDqA4d5NL0k/2000x2000");
+      background-size: cover;
+      display: flex;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    #bands {
+      list-style: inside square;
+      font-size: 20px;
+      background: white;
+      width: 500px;
+      margin: auto;
+      padding: 0;
+      box-shadow: 0 0 0 20px rgba(0, 0, 0, 0.05);
+    }
+    
+    #bands li {
+      border-bottom: 1px solid #efefef;
+      padding: 20px;
+    }
+    
+    #bands li:last-child {
+      border-bottom: 0;
+    }
+
+    a {
+      color: #ffc600;
+      text-decoration: none;
+    }
+
+  </style>
+
+  <ul id="bands"></ul>
+
+<script>
+const bands = ['The Plot in You', 'The Devil Wears Prada', 'Pierce the Veil', 'Norma Jean', 'The Bled', 'Say Anything', 'The Midway State', 'We Came as Romans', 'Counterparts', 'Oh, Sleeper', 'A Skylit Drive', 'Anywhere But Here', 'An Old Dog'];
+
+// (2) strip function to remove a or the using REGEX
+function strip(bandName) {
+  return bandName.replace(/^(a |the |an )/i, '').trim();
+}
+
+//(1) function to sort the list alphabetically using SORT
+/* const sortedBands = bands.sort(function (a, b) {
+  
+  if (strip(a) > strip(b) {
+    return 1;
+  } else {
+    return -1;
+  }
+}) */
+
+// implicit return. don't need braces or 'return'
+const sortedBands = bands.sort((a, b) => strip(a) > strip(b) ? 1 : -1);
+
+//(3) grab bands id from html and append each item from the list to it using MAP & JOING, but a or the wont affect order 
+
+document.querySelector('#bands').innerHTML = 
+  // for each map we'll return band, but band in a list item
+  sortedBands.map(band => `<li>${band}</li>`) //this returns array
+  .join(''); //so we want to join it.This removes the commas. and joins it all as one big string
+
+console.log(sortedBands);
+
+</script>
+
+</body>
+</html>
