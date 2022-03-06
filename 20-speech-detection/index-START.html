@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Speech Detection</title>
+</head>
+<body>
+
+  <div class="words" contenteditable>
+  </div>
+
+<script>
+  // global variable that lives in browser --> And that lives on top of window. Chrome:webkitSR.
+  window.SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+  const recognition = new SpeechRecognition();
+  recognition.interimResults = true; //populates AS you're speaking
+
+  let p = document.createElement('p'); //we use let bc we are reassigning this var...
+  const words = document.querySelector('.words');
+  words.appendChild(p);
+
+  // listen for results (similar to listening for clicks)
+  // we're listening for the result and once it is finished, it unbinds itself --> this is the reason why it stops listening/recording
+  recognition.addEventListener('result', e => {
+    // console.log(e.results);
+    const transcript = Array.from(e.results)
+      .map(result => result[0])
+      .map(result => result.transcript)
+      .join('');
+
+      //add text to p tag/DOM.
+      p.textContent = transcript;
+      // below we prevent the DOM text from getting overwritten upon new recording by having new speech in a new paragraph on pg
+      if (e.results[0].isFinal) {
+        //we don't create new p variable. Just overwrite var above with a new create element 'p' and append that too.
+        //same var. new para.
+        p = document.createElement('p');
+        words.appendChild(p);
+      }
+
+      //other fun stuff we can do with this code.
+      if(transcript.includes('get the weather')) {
+        console.log('Getting the weather!')
+        //can hook it up to other functions or external weather API
+      }
+
+    console.log(transcript);
+  })
+
+  // "when recognition function ends, run the recognition.start function"
+  // the reason we dont use the commented line below is because we want to just supply the name of the function, not actually run it(). Bc if we do ask to run it in the Event Listener, it'll run on page load and we dont want that. 
+  // recognition.addEventListener('end', recognition.start());
+  recognition.addEventListener('end', recognition.start);
+  recognition.start();
+
+</script>
+
+
+  <style>
+    html {
+      font-size: 10px;
+    }
+
+    body {
+      background: #ffc600;
+      font-family: 'helvetica neue';
+      font-weight: 200;
+      font-size: 20px;
+    }
+
+    .words {
+      max-width: 500px;
+      margin: 50px auto;
+      background: white;
+      border-radius: 5px;
+      box-shadow: 10px 10px 0 rgba(0,0,0,0.1);
+      padding: 1rem 2rem 1rem 5rem;
+      background: -webkit-gradient(linear, 0 0, 0 100%, from(#d9eaf3), color-stop(4%, #fff)) 0 4px;
+      background-size: 100% 3rem;
+      position: relative;
+      line-height: 3rem;
+    }
+    
+    p {
+      margin: 0 0 3rem;
+    }
+
+    .words:before {
+      content: '';
+      position: absolute;
+      width: 4px;
+      top: 0;
+      left: 30px;
+      bottom: 0;
+      border: 1px solid;
+      border-color: transparent #efe4e4;
+    }
+  </style>
+
+</body>
+</html>
