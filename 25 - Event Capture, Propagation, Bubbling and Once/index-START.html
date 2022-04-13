@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Understanding JavaScript's Capture</title>
+</head>
+<body class="bod">
+
+  <div class="one">
+    <div class="two">
+      <div class="three">
+      </div>
+    </div>
+  </div>
+
+<style>
+  html {
+    box-sizing: border-box;
+  }
+  
+  *, *:before, *:after { 
+    box-sizing: inherit; 
+  }
+
+  div {
+    width: 100%;
+    padding: 100px;
+  }
+
+  .one {
+    background: thistle;
+  }
+
+  .two {
+    background: mistyrose;
+  }
+
+  .three {
+    background: coral;
+  }
+</style>
+
+<button></button>
+<script>
+
+  // listen for a click on all divs
+  const divs = document.querySelectorAll('div');
+  const button = document.querySelector('button');
+  
+  function logText(e) {
+    console.log(this.classList.value);
+
+    e.stopPropagation(); //stop bubbling (up or down dep. on capture: __). stop triggering parent elements. can also target middle elements. 
+  }
+  
+  // listen for a click on all divs
+  // capture: true --> logText wont get run on bubble up. It will run on capture down. By default it is false
+  // in other words: function will run downwards down the elements instead of default way of running up the elements.
+  // this is to prevent bubbling up
+  divs.forEach(div => div.addEventListener('click', logText, {
+    capture: false,
+    once: true //will listen for a click once and then unbind itself so there's no future clicks on it. (=equivalent to div.removeEventListener)
+
+      // div.removeEventLister('click', logText); ^helpful if you have a button that you only want clicked once! 
+
+      //eg) Store checkouts.
+  }));
+
+  button.addEventListener('click', () => {
+    console.log('click!!!');
+  }, {
+    once: true
+  })
+
+</script>
+</body>
+</html>
