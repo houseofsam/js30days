@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Click and Drag</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="items">
+    <div class="item item1">01</div>
+    <div class="item item2">02</div>
+    <div class="item item3">03</div>
+    <div class="item item4">04</div>
+    <div class="item item5">05</div>
+    <div class="item item6">06</div>
+    <div class="item item7">07</div>
+    <div class="item item8">08</div>
+    <div class="item item9">09</div>
+    <div class="item item10">10</div>
+    <div class="item item11">11</div>
+    <div class="item item12">12</div>
+    <div class="item item13">13</div>
+    <div class="item item14">14</div>
+    <div class="item item15">15</div>
+    <div class="item item16">16</div>
+    <div class="item item17">17</div>
+    <div class="item item18">18</div>
+    <div class="item item19">19</div>
+    <div class="item item20">20</div>
+    <div class="item item21">21</div>
+    <div class="item item22">22</div>
+    <div class="item item23">23</div>
+    <div class="item item24">24</div>
+    <div class="item item25">25</div>
+  </div>
+
+<script>
+  const slider = document.querySelector('.items');
+  let isDown = false;
+  let scrollLeft; //for initial scroll value.
+  let startX; // forgot this one.
+
+  // ctrl + alt + down to type multiple 
+  slider.addEventListener('mousedown', (e) => {
+    isDown = true;
+    slider.classList.add('active'); //no need for dot before .class
+    startX = e.pageX - slider.offsetLeft; // to account for any margin outside of slider
+    console.log(startX, slider.scrollLeft);
+    // we store scrollLeft value so we can reference it in mousemove function below. If we don't do this, scrollLeft will be recalculated every single time if we dont include it below
+    scrollLeft = slider.scrollLeft; //review why its 0 at first. Nvm it displays how much has been scrolled atm.
+
+  });
+
+  slider.addEventListener('mouseleave', (e) => {
+    isDown = false;
+    slider.classList.remove('active');
+  });
+
+  slider.addEventListener('mouseup', (e) => {
+    isDown = false;
+    slider.classList.remove('active');
+  });
+
+  slider.addEventListener('mousemove', (e) => {
+    if (!isDown) return;
+    e.preventDefault; // will prevent any clicks on content within slider as it's being moved. Including links
+    // startX - e.pageX;
+    let x = e.pageX - slider.offsetLeft; //same as above formula. This gets end/final value
+    let walk = (x - startX) * 3; //multiplier to increase scroll sensitivity.
+    console.log({walk, scrollLeft, startX, x}); //put vars in {} lifehack
+    slider.scrollLeft = scrollLeft - walk; //without scrollLeft var, the scrolling will be glitchy. This is the reason we store scrollLeft value above. See above.
+    // If we don't do this, scrollLeft will be recalculated every single time causing glitch.
+
+    /*
+    Basically. If you scrollLeft0, startX @50 & drag left finish x @20, walk is going to be -30. Therefore, whatever you've scrolled (scrollLeft) minus (negative30) equals scroll left 30 units right (+30). 
+
+    If you scrollLeft50, startX @10 & drag right finish x @ 30, walk is going to be +20. Therefore, scrollLeft(init50) - (+20) = 30.  Moving left 20 units and ending up at scrollLeft30. 
+
+    */
+  });
+</script>
+
+  </body>
+</html>
